@@ -248,8 +248,12 @@ if __name__ == "__main__":
                 print(f'BUYING THIS MUCH FROM ENIGMA - {sum_to_buy}')
                 proc = subprocess.Popen(["curl", "--location",
                                         "--request", "GET",
-                                        "https://api.enigma-securities.io/product",
-                                        "-H", f"Authorization:{enigma_auth}"
+                                        "https://api.enigma-securities.io/trade",
+                                        "-H", f"Authorization:{enigma_auth}",
+                                        "--form", "type=MKT",
+                                        "--form", "side=BUY",
+                                        "--form", "product_id=2",
+                                        "--form", f"quantity={sum_to_buy}",
                                         ], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
                 output = proc.stdout.read()
                 print(output)
