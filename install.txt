@@ -1,0 +1,16 @@
+
+
+# install conda and set PATH
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+chmod +x Miniconda3-latest-Linux-x86_64.sh
+./Miniconda3-latest-Linux-x86_64.sh -b -p /miniconda3
+PATH="/miniconda3/bin:${PATH}"
+
+# install google API packages
+pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
+
+apt-get install -y git-all
+git clone https://github.com/j2moreno/quad_coin_api.git
+cd quad_coin_api
+
+# Run script
