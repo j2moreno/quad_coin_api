@@ -189,9 +189,6 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    # get the Gmail API service
-    service = gmail_authenticate(args.google_creds)
-
     # initalize ids and auth token
     ids = {}
     batch = 0.0
@@ -199,6 +196,9 @@ if __name__ == "__main__":
     print(enigma_auth)
 
     while True:
+
+        # get the Gmail API service
+        service = gmail_authenticate(args.google_creds)
 
         # get current time
         now = datetime.datetime.now()
