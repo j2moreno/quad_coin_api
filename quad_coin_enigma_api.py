@@ -248,7 +248,7 @@ if __name__ == "__main__":
                 print("="*50)
                 print(f'BUYING THIS MUCH FROM ENIGMA - {sum_to_buy}')
                 proc = subprocess.Popen(["curl", "--location",
-                                        "--request", "GET",
+                                        "--request", "POST",
                                         "https://api.enigma-securities.io/trade",
                                         "-H", f"Authorization:{enigma_auth}",
                                         "--form", "type=MKT",
