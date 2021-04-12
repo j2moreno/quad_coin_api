@@ -213,7 +213,7 @@ if __name__ == "__main__":
             print(f'New auth token: {enigma_auth}')
             print("Cleared IDs")
 
-        print(ids)
+        #print(ids)
 
         results = search_messages(service, "robot@generalbytes.com")
         uniq_id = results[0]['id'].encode('utf-8')
@@ -266,4 +266,4 @@ if __name__ == "__main__":
             print()
 
         ## check every 30 secs
-        time.sleep(30)
+        time.sleep(5)
