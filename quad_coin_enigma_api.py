@@ -111,6 +111,7 @@ def parse_parts(service, parts, folder_name):
                     #    eth = text[eth_index-1]
                     #    print(f'Ethereum to buy back: {eth}')
                     #    return eth
+    return 0.00
 
 def read_message(service, message_id):
     """
