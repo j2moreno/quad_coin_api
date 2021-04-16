@@ -9,6 +9,7 @@ import requests
 import subprocess
 import json
 import datetime
+import socket
 
 # Gmail API utils
 from googleapiclient.discovery import build
@@ -26,6 +27,9 @@ from email.mime.audio import MIMEAudio
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from mimetypes import guess_type as guess_mime_type
+
+# set socket timeout to 10 secs
+socket.setdefaulttimeout(8)
 
 # Request all access (permission to read/send/receive emails, manage the inbox, and more)
 SCOPES = ['https://mail.google.com/']
@@ -266,4 +270,4 @@ if __name__ == "__main__":
             print()
 
         ## check every 30 secs
-        time.sleep(5)
+        time.sleep(10)
