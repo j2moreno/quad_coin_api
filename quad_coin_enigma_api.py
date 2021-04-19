@@ -202,72 +202,76 @@ if __name__ == "__main__":
 
     while True:
 
-        # get the Gmail API service
-        service = gmail_authenticate(args.google_creds)
+        try:
+            # get the Gmail API service
+            service = gmail_authenticate(args.google_creds)
 
-        # get current time
-        now = datetime.datetime.now()
+            # get current time
+            now = datetime.datetime.now()
 
-        # every day at 2am a new auth token will be generated
-        if now.hour == 2 and now.minute == 1:
-            enigma_auth = get_enigma_auth(args.username, args.password)
-            last_hash = ids[last_id]
-            ids = {}
-            ids[last_id] = last_hash
-            print(f'New auth token: {enigma_auth}')
-            print("Cleared IDs")
+            # every day at 2am a new auth token will be generated
+            if now.hour == 2 and now.minute == 1:
+                enigma_auth = get_enigma_auth(args.username, args.password)
+                last_hash = ids[last_id]
+                ids = {}
+                ids[last_id] = last_hash
+                print(f'New auth token: {enigma_auth}')
+                print("Cleared IDs")
 
-        #print(ids)
+            #print(ids)
 
-        results = search_messages(service, "robot@generalbytes.com")
-        uniq_id = results[0]['id'].encode('utf-8')
-        if uniq_id not in ids:
-            hashid = hashlib.sha256(uniq_id)
-            ids[uniq_id] = hashid
-            last_id = uniq_id
+            results = search_messages(service, "robot@generalbytes.com")
+            uniq_id = results[0]['id'].encode('utf-8')
+            if uniq_id not in ids:
+                hashid = hashlib.sha256(uniq_id)
+                ids[uniq_id] = hashid
+                last_id = uniq_id
 
-            to_buy_back = read_message(service, results[0])
-            """
-            EndPoint:
-            https://api.enigma-securities.io/
+                to_buy_back = read_message(service, results[0])
+                """
+                EndPoint:
+                https://api.enigma-securities.io/
 
-            # get a quote
-            curl --location --request GET 'https://sandbox.rest-api.enigma-securities.io/product/'
+                # get a quote
+                curl --location --request GET 'https://sandbox.rest-api.enigma-securities.io/product/'
 
-            # buy
-            curl \
-            --location --request POST 'https://api.enigma-securities.io/trade' \
-            -H 'Authorization:{key}' \
-            --form 'type=MKT' \
-            --form 'side=BUY' \
-            --form 'product_id=2' \
-            --form 'quantity=1'
-            """
-            if to_buy_back < 0.001 and batch < 0.001:
-                batch += to_buy_back
-                print(f'Current buy back (batches) - {batch}')
+                # buy
+                curl \
+                --location --request POST 'https://api.enigma-securities.io/trade' \
+                -H 'Authorization:{key}' \
+                --form 'type=MKT' \
+                --form 'side=BUY' \
+                --form 'product_id=2' \
+                --form 'quantity=1'
+                """
+                if to_buy_back < 0.001 and batch < 0.001:
+                    batch += to_buy_back
+                    print(f'Current buy back (batches) - {batch}')
 
-            else:
-                sum_to_buy = batch + to_buy_back
-                print("="*50)
-                print(f'BUYING THIS MUCH FROM ENIGMA - {sum_to_buy}')
-                proc = subprocess.Popen(["curl", "--location",
-                                        "--request", "POST",
-                                        "https://api.enigma-securities.io/trade",
-                                        "-H", f"Authorization:{enigma_auth}",
-                                        "--form", "type=MKT",
-                                        "--form", "side=BUY",
-                                        "--form", "product_id=2",
-                                        "--form", f"quantity={sum_to_buy}",
-                                        ], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
-                output = proc.stdout.read()
-                print(output)
-                print("="*50)
-                batch = 0.0
+                else:
+                    sum_to_buy = batch + to_buy_back
+                    print("="*50)
+                    print(f'BUYING THIS MUCH FROM ENIGMA - {sum_to_buy}')
+                    proc = subprocess.Popen(["curl", "--location",
+                                            "--request", "POST",
+                                            "https://api.enigma-securities.io/trade",
+                                            "-H", f"Authorization:{enigma_auth}",
+                                            "--form", "type=MKT",
+                                            "--form", "side=BUY",
+                                            "--form", "product_id=2",
+                                            "--form", f"quantity={sum_to_buy}",
+                                            ], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+                    output = proc.stdout.read()
+                    print(output)
+                    print("="*50)
+                    batch = 0.0
 
-            print("FOUND NEW EMAIL")
-            print(ids)
-            print()
+                print("FOUND NEW EMAIL")
+                print(ids)
+                print()
+
+        except socket.timeout:
+            print("SOCKET TIMEOUT TRYING AGAIN")
 
         ## check every 30 secs
         time.sleep(10)
