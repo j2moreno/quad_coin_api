@@ -10,6 +10,7 @@ import subprocess
 import json
 import datetime
 import socket
+import ssl
 
 # Gmail API utils
 from googleapiclient.discovery import build
@@ -272,6 +273,8 @@ if __name__ == "__main__":
 
         except socket.timeout:
             print("SOCKET TIMEOUT TRYING AGAIN")
+        except ssl.SSLError as err:
+            print("SSL ERROR TRYING AGAIN")
 
         ## check every 30 secs
         time.sleep(10)
