@@ -102,6 +102,7 @@ if __name__ == "__main__":
 
             if txid not in ids:
                 ids[txid] = txid
+                last_id = txid
                 print(ids)
 
                 if to_buy_back < 0.001 and batch < 0.001:
