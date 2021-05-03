@@ -26,13 +26,14 @@ def get_last_transactions(key):
     output = proc.stdout.read()
     #print(output)
     d = json.loads(output)
-    crypto = d["data"]["network"]
+    if d["data"]["network"]:
+        crypto = d["data"]["network"]
 
-    if crypto == "BTC":
-        txid = d["data"]["txs"][0]["txid"]
-        to_buy_back = float(d["data"]["txs"][0]["total_amount_sent"])
+        if crypto == "BTC":
+            txid = d["data"]["txs"][0]["txid"]
+            to_buy_back = float(d["data"]["txs"][0]["total_amount_sent"])
 
-        return to_buy_back, txid
+            return to_buy_back, txid
 
     return 0.0, "NA"
 
@@ -133,5 +134,5 @@ if __name__ == "__main__":
             print("SSL ERROR TRYING AGAIN")
 
         ## check every 30 secs
-        time.sleep(10)
+        time.sleep(30)
 
