@@ -53,6 +53,8 @@ def get_enigma_auth(user, password):
     --data-urlencode 'username=client_sandbox' \
     --data-urlencode 'password=saQidf_8'
     """
+    auth_key = "NA"
+
     proc = subprocess.Popen(["curl", "--location",
                              "--request", "PUT",
                              "https://api.enigma-securities.io/auth",
@@ -60,8 +62,14 @@ def get_enigma_auth(user, password):
                              "--data-urlencode", f"password={password}"], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
 
     output = proc.stdout.read()
-    d = json.loads(output)
-    auth_key = d["key"]
+
+    try:
+        d = json.loads(output)
+        auth_key = d["key"]
+    except JSONDecodeError as e:
+        print("ENIGMA DECODING JSON HAS FAILED")
+        print(output)
+        print("ENIGMA DECODING JSON HAS FAILED")
 
     return auth_key
 
@@ -94,13 +102,17 @@ if __name__ == "__main__":
             now = datetime.datetime.now()
 
             # every day at 2am a new auth token will be generated
-            if now.hour == 2 and now.minute == 1:
+            if now.hour == 7 and now.minute == 1:
                 enigma_auth = get_enigma_auth(args.username, args.password)
+                if enigma_auth == "NA":
+                    continue
+
                 last_txid = ids[-1]
                 ids = []
                 ids.append(last_txid)
                 print(f'New auth token: {enigma_auth}')
                 print("Cleared IDs")
+                time.sleep(60)
 
             to_buy_back, txid = get_last_transactions(args.api_key)
 
