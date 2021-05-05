@@ -105,7 +105,7 @@ if __name__ == "__main__":
             to_buy_back, txid = get_last_transactions(args.api_key)
 
             if txid == "NA":
-                time.sleep(60)
+                time.sleep(5)
                 continue
 
             if txid not in ids:
@@ -143,5 +143,5 @@ if __name__ == "__main__":
                     out.close()
 
             ## check every 60 secs
-            time.sleep(60)
+            time.sleep(5)
 
