@@ -12,7 +12,7 @@ import datetime
 
 from json.decoder import JSONDecodeError
 
-def get_last_transactions(key):
+def get_last_transactions(key, ids):
 
     proc = subprocess.Popen(["curl", "-X", "GET",
                             f"https://block.io/api/v2/get_transactions/?api_key={key}&type=sent"
@@ -28,14 +28,29 @@ def get_last_transactions(key):
 
         return 0.0, "NA"
 
+    to_buy_back = 0.0
     if d["data"]["network"]:
         crypto = d["data"]["network"]
 
         if crypto == "BTC":
-            txid = d["data"]["txs"][0]["txid"]
-            to_buy_back = float(d["data"]["txs"][0]["total_amount_sent"])
 
-            return to_buy_back, txid
+            # check top
+            txid = d["data"]["txs"][0]["txid"]
+            if txid not in ids:
+                to_buy_back = float(d["data"]["txs"][0]["total_amount_sent"])
+
+            # check one back
+            txid_back = d["data"]["txs"][1]["txid"]
+            if txid_back not in ids:
+                back_to_buy_back = float(d["data"]["txs"][1]["total_amount_sent"])
+                ids.append(txid_back)
+
+                print("*"*50)
+                print(f"Also buying back - {txid_back} - {back_to_buy_back}")
+                print("*"*50)
+                to_buy_back += back_to_buy_back
+
+            return to_buy_back, txid, ids
 
     return 0.0, "NA"
 
@@ -114,7 +129,7 @@ if __name__ == "__main__":
                 print("Cleared IDs")
                 time.sleep(60)
 
-            to_buy_back, txid = get_last_transactions(args.api_key)
+            to_buy_back, txid, ids = get_last_transactions(args.api_key, ids)
 
             if txid == "NA":
                 time.sleep(5)
