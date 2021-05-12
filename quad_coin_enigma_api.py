@@ -123,7 +123,9 @@ if __name__ == "__main__":
                     continue
 
                 last_txid = ids[-1]
+                sec_last_txid = ids[-2]
                 ids = []
+                ids.append(sec_last_txid)
                 ids.append(last_txid)
                 print(f'New auth token: {enigma_auth}')
                 print("Cleared IDs")
