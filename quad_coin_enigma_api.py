@@ -26,7 +26,7 @@ def get_last_transactions(key, ids):
         print(output)
         print("DECODING JSON HAS FAILED")
 
-        return 0.0, "NA"
+        return 0.0, "NA", ids
 
     to_buy_back = 0.0
     if d["data"]["network"]:
@@ -52,7 +52,7 @@ def get_last_transactions(key, ids):
 
             return to_buy_back, txid, ids
 
-    return 0.0, "NA"
+    return 0.0, "NA", ids
 
 def get_enigma_auth(user, password):
     """
